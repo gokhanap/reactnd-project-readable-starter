@@ -12,6 +12,8 @@ import Createdit from './components/Createdit'
 import { connect } from 'react-redux'
 import { fetchCategories,fetchPosts } from './actions'
 
+import { Container, Header, Icon } from 'semantic-ui-react'
+
 
 export class App extends Component {
   // state = {
@@ -29,32 +31,37 @@ export class App extends Component {
 
     // console.log(categories)
     return (
-      <div>
+      <Container>
+        <Header as="h3" textAlign="center" icon>
+          <Icon name='comments outline' color="teal" />
+          <Header.Content color="teal" content="Readable" />
+          <Header.Subheader color="teal" content="App" />
 
+        </Header>
         <Route exact path="/" render={() => (
           <div>
             <Categories />
-            <Posts />
+            <Posts categories="all" />
           </div>
         )}/>
 
 
 
-        <Route path="/react" render={() => (
+        <Route exact path="/react" render={() => (
           <div>
             <Categories />
             <Posts category="react" />
           </div>
         )}/>
 
-        <Route path="/redux" render={() => (
+        <Route exact path="/redux" render={() => (
           <div>
             <Categories />
             <Posts category="redux" />
           </div>
         )}/>
 
-        <Route path="/udacity" render={() => (
+        <Route exact path="/udacity" render={() => (
           <div id='udacity'>
             <Categories />
             <Posts category="udacity" />
@@ -63,15 +70,17 @@ export class App extends Component {
 
 
 
-        <Route path="/createdit" render={() => (
+        <Route exact path="/createdit" render={() => (
           <Createdit />
         )}/>
 
-        <Route path="/:category/post.id" render={() => (
-          <Post />
+        <Route exact path="/:category/:id" render={() => (
+          <div>
+            <p>I am a comment</p>
+          </div>
         )}/>
 
-      </div>
+      </Container>
     );
   }
 }

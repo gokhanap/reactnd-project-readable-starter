@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { addPost, fetchPosts, receivePosts } from '../actions'
+import { Post } from './Post'
+import { Button, List, Icon } from 'semantic-ui-react'
 
 
 
@@ -12,46 +14,31 @@ class Posts extends Component {
   }
 
   render() {
-    const { posts, category } = this.props
-    console.log('posts', posts)
-    console.log('category', category)
+    const { posts = [], category = 'all' } = this.props
+
+    // console.log('posts', posts)
+    // console.log('category', category)
     return (
       <div>
-        <p>This is {category} posts page</p>
-        <ul>
+        <h2>This is {category} posts page</h2>
+
+
+        <List celled divided relaxed>
 
           {(
-            posts !== undefined &&
-              posts.map(post =>
-                <div>
-                  <li
-                  className="post"
-                  style={{
-                    border: '2px solid #FF9800',
-                  }}
-                  key={post.category + post.id}>
-
-                  <Link to={`/${post.category}/${post.id}`}>Title: {post.title}</Link><br/>
-                  Body: {post.body}<br/>
-                  Author: {post.author}<br/>
-                  Score: {post.voteScore}
-                  <button>Vote Up</button>
-                  <button>Vote Down</button>
-                  <button>Edit</button>
-                  <button>Delete</button>
-                  <br/>
-                  Comments: {post.commentCount}<br/>
-                  </li>
-
-                  <Route path={`/${post.category}/${post.id}`} render={() => (
-                    <div>Comments: {category} {post.id}</div>
-                  )}/>
-                </div>
+            posts.length > 0 && category !== 'all' &&
+              posts.filter(post => post.category == category).map(post =>
+                <Post key={post.id} post={post}/>
               )
-
+          )}
+          {(
+            posts.length > 0 && category === 'all' &&
+              posts.map(post =>
+                <Post key={post.id} post={post}/>
+              )
           )}
 
-        </ul>
+        </List>
 
 
 

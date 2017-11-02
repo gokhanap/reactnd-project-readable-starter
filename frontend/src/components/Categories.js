@@ -2,32 +2,58 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { addPost, fetchCategories, receiveCategories } from '../actions'
-// import * as theAPI from '../theAPI.js'
+import { Menu } from 'semantic-ui-react'
 
 
 export class Categories extends Component {
+  state = {}
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   handle = () => {
     this.props.addPost({})
   }
 
-  componentWillMount() {
-    // this.props.fetchCategories({})
-  }
-
 
   render() {
-
+    const { activeItem } = this.state
     const { categories } = this.props
 
     // console.log("props", this.props);
     return (
-        <ul>
-          <li><Link to="/">Default</Link></li>
-          {categories !== undefined && categories.map( category =>
-            <li key={category.name}><Link to={category.path}>{category.name}</Link></li>
-          )}
-        </ul>
+
+      <Menu widths="4">
+
+        <Menu.Item
+          name="All Posts"
+          key="AllPosts"
+          active={activeItem === 'All Posts'}
+          content="All Posts"
+          onClick={this.handleItemClick}
+          as={Link}
+          to="./"
+        />
+
+        {categories !== undefined && categories.map( category =>
+
+          <Menu.Item
+            key={category.name}
+            name={category.name}
+            active={activeItem === category.name}
+            content={category.name}
+            onClick={this.handleItemClick}
+            as={Link}
+            to={`/${category.path}`}
+          />
+        )}
+
+
+      </Menu>
+
+
+
+
+
         )
   }
 }
