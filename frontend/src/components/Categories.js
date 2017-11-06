@@ -16,13 +16,13 @@ export class Categories extends Component {
 
 
   render() {
-    const { activeItem } = this.state
+    const { activeItem = this.props.category } = this.state
     const { categories } = this.props
 
     // console.log("props", this.props);
     return (
 
-      <Menu widths="4">
+      <Menu pointing widths="5" color="teal">
 
         <Menu.Item
           name="All Posts"
@@ -31,7 +31,7 @@ export class Categories extends Component {
           content="All Posts"
           onClick={this.handleItemClick}
           as={Link}
-          to="./"
+          to="/"
         />
 
         {categories !== undefined && categories.map( category =>
@@ -40,13 +40,23 @@ export class Categories extends Component {
             key={category.name}
             name={category.name}
             active={activeItem === category.name}
-            content={category.name}
+            content={category.name.charAt(0).toUpperCase() + category.name.slice(1)}
             onClick={this.handleItemClick}
             as={Link}
             to={`/${category.path}`}
           />
+
         )}
 
+        <Menu.Item
+          name="Add Post"
+          key="AddPost"
+          active={activeItem === 'Add Post'}
+          content="Add Post"
+          onClick={this.handleItemClick}
+          as={Link}
+          to="./addpost"
+        />
 
       </Menu>
 

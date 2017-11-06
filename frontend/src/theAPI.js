@@ -5,14 +5,39 @@ const headers = {
   'Authorization': 'token'
 }
 
+const initGET = {
+  method: 'GET',
+  headers
+}
+
+const initPUT = {
+  method: 'PUT',
+  headers
+}
+
 export const getCat = () =>
-  fetch(`${api}/categories`, { headers })
+  fetch(`${api}/categories`, initGET)
   .then(res => res.json())
   .then(data => data.categories)
 
 export const getPosts = () =>
-  fetch(`${api}/posts`, { headers })
+  fetch(`${api}/posts`, initGET)
   .then(res => res.json())
+
+export const getComments = (id) =>
+  fetch(`${api}/posts/${id}/comments`, initGET)
+  .then(res => res.json())
+  // .then(res => console.log(res))
+
+
+export const putPost = (id, post) =>
+  fetch(`${api}/posts/${id}`,
+    { method: 'GET',
+    headers: headers
+    }
+  )
+  .then(res => res.json())
+  .then(res => console.log("APIresult:",res))
 
 
 
