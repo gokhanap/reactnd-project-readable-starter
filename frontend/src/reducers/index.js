@@ -10,21 +10,11 @@ import {
     RECEIVE_COMMENTS,
     UPVOTE_POST,
     DOWNVOTE_POST,
+    UPVOTE_COMMENT,
+    DOWNVOTE_COMMENT,
     } from '../actions'
-import * as theAPI from '../theAPI.js'
-import { addPost, fetchCategories, receiveCategories } from '../actions'
-
-
-
-// let initialState = {
-//     categories: ['react', 'redux', 'udacity'],
-//     comments: null
-// }
-
 
 let initialState = {}
-
-
 
 // const fromapi = (theAPI.getPosts().then(data => console.log(data)))
 
@@ -51,13 +41,13 @@ function appReducer (state = initialState, action) {
             }
 
         case RECEIVE_POSTS :
-            let newposts = {}
+            let formattedPosts = {}
             posts.map(post => {
-                newposts[post.id] = post
+                formattedPosts[post.id] = post
             })
             return {
                 ...state,
-                posts: newposts
+                posts: formattedPosts
             }
 
         case RECEIVE_COMMENTS :
@@ -80,27 +70,53 @@ function appReducer (state = initialState, action) {
 
 
         case UPVOTE_POST :
-        let upNewScore = state.posts[id].voteScore += 1
+        let upNewPostScore = state.posts[id].voteScore += 1
             return {
                 ...state,
                 posts: {
                     ...state.posts,
                     [id] : {
                         ...state.posts[id],
-                        voteScore: upNewScore
+                        voteScore: upNewPostScore
                     }
                 }
             }
 
         case DOWNVOTE_POST :
-        let downNewScore = state.posts[id].voteScore -= 1
+        let downNewPostScore = state.posts[id].voteScore -= 1
             return {
                 ...state,
                 posts: {
                     ...state.posts,
                     [id] : {
                         ...state.posts[id],
-                        voteScore: downNewScore
+                        voteScore: downNewPostScore
+                    }
+                }
+            }
+
+        case UPVOTE_COMMENT :
+        let upNewCommentScore = state.comments[id].voteScore += 1
+            return {
+                ...state,
+                comments: {
+                    ...state.comments,
+                    [id] : {
+                        ...state.comments[id],
+                        voteScore: upNewCommentScore
+                    }
+                }
+            }
+
+        case DOWNVOTE_COMMENT :
+        let downNewCommentScore = state.comments[id].voteScore -= 1
+            return {
+                ...state,
+                comments: {
+                    ...state.comments,
+                    [id] : {
+                        ...state.comments[id],
+                        voteScore: downNewCommentScore
                     }
                 }
             }

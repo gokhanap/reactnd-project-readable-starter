@@ -12,6 +12,8 @@ export const RECEIVE_COMMENTS = "RECEIVE_COMMENTS";
 
 export const UPVOTE_POST = "UPVOTE_POST";
 export const DOWNVOTE_POST = "DOWNVOTE_POST";
+export const UPVOTE_COMMENT = "UPVOTE_COMMENT";
+export const DOWNVOTE_COMMENT = "DOWNVOTE_COMMENT";
 
 export const receiveCategories = categories => ({
   type: RECEIVE_CATEGORIES,
@@ -69,6 +71,16 @@ export const upVotePost = id =>({
 
 export const downVotePost = id =>({
   type: DOWNVOTE_POST,
+  id
+});
+
+export const upVoteComment = id =>({
+  type: UPVOTE_COMMENT,
+  id
+});
+
+export const downVoteComment = id =>({
+  type: DOWNVOTE_COMMENT,
   id
 });
 

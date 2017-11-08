@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Route, Link, withRouter} from 'react-router-dom';
+import { Link, withRouter} from 'react-router-dom';
 import { upVotePost, downVotePost } from '../actions'
-import { List, Button, Segment, Header, Container } from 'semantic-ui-react'
+import { Button, Segment, Header, Container } from 'semantic-ui-react'
 import ListComments from './ListComments'
 
 export class DisplayPost extends Component {
   state = {
     activeTrash: false,
-    showComments: true
   }
 
   handleClickUp = () => {
@@ -26,14 +25,14 @@ export class DisplayPost extends Component {
   handleClickTrash = () => this.setState({ activeTrash: !this.state.activeTrash })
 
   render() {
-    const { post } = this.props
-    const { activeUp, activeDown, activeTrash, showComments } = this.state
+    const { post, showComments = false } = this.props
+    const { activeUp, activeDown, activeTrash } = this.state
     // console.log(post)
     // console.log(this.props)
     return (
 
 
-      // activeTrash !== true &&
+      activeTrash !== true &&
       <Segment>
         <Container>
           <Header
@@ -60,7 +59,9 @@ export class DisplayPost extends Component {
             onClick={this.handleClickDown}
             icon="chevron down">
             </Button>
+          </Button.Group>
 
+          <Button.Group basic compact size="mini">
             <Button floated="right"
             icon="write"
             as={Link}
@@ -86,13 +87,12 @@ export class DisplayPost extends Component {
         {(
           showComments === true
           &&
-          <p>hiia</p>
-        // <ListComments />
+        <ListComments parentId={post.id}/>
         )}
 
 
       </Segment>
-      
+
 
       )
 

@@ -40,8 +40,8 @@ export class App extends Component {
 
 
     // console.log(categories)
-    console.log(formattedPosts.length)
-    console.log(posts)
+    // console.log(formattedPosts.length)
+    // console.log(posts)
     // console.log(sortedAllPostIds)
     return (
       <Container>
@@ -96,11 +96,10 @@ export class App extends Component {
           <Route exact path="/:category/:id" render={( { match } ) => (
             <div>
               <Categories />
-              <h1>Detail Page</h1>
               {(
                 formattedPosts.length > 0 &&
                   formattedPosts.filter(( { id } ) => match.params.id == id).map(( { id } ) =>
-                    <DisplayPost key={id} post={posts[id]}/>
+                    <DisplayPost key={id} post={posts[id]} showComments={true}/>
                   )
               )}
             </div>

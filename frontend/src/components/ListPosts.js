@@ -31,6 +31,8 @@ export class ListPosts extends Component {
 
     // console.log('posts', posts)
     // console.log('category', category)
+    console.log('sortedPosts', sortedPosts.length)
+    console.log('sortedPosts', sortedPosts)
     return (
       <div>
         <Container textAlign="right">
