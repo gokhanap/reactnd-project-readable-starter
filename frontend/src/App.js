@@ -13,13 +13,15 @@ import AddPost from './components/AddPost'
 import { connect } from 'react-redux'
 import { fetchCategories, fetchPosts, fetchComments } from './actions'
 
-import { Container, Header, Icon, List } from 'semantic-ui-react'
+import { Icon, List, Button, Segment, Header, Container, Label } from 'semantic-ui-react'
+
+import sortBy from 'sort-by'
 
 
 export class App extends Component {
-  // state = {
-  //   categories: []
-  // }
+  state = {
+    sortOption: 'voteScore'
+  }
 
   componentWillMount() {
     this.props.fetchCategories({})
@@ -27,13 +29,35 @@ export class App extends Component {
     this.props.fetchComments("8xf0y6ziyjabvozdd253nd")
   }
 
+
+  handleDate = () => {
+    this.setState({ sortOption: 'timestamp' })
+    }
+
+  handleScore = () => {
+    this.setState({ sortOption: 'voteScore' })
+    }
+
+
+
+
   render() {
     // console.log(this.props.categories)
-    const { categories = [null], posts={} } = this.props
-    const allPostIds = Object.getOwnPropertyNames(posts)
+    const { categories = [null], posts = {} } = this.props
+    const { sortOption } = this.state
+
+    let sortedPosts = Object.values(posts)
+    sortedPosts = sortedPosts.sort(sortBy(sortOption))
+
+
+    const sortedAllPostIds = sortedPosts.reduce((p,c) => [...p, c.id], [])
+
+
 
     // console.log(categories)
-    // console.log(posts)
+    // console.log(Object.values(posts))
+    // console.log(sortedAllPostIds)
+    console.log(sortedPosts.length)
     return (
       <Container>
         <Header textAlign="center" icon>
@@ -46,24 +70,61 @@ export class App extends Component {
 
         <Switch>
 
+
+
           <Route exact path="/" render={() => (
             <div>
               <Categories category="All Posts" />
+
+
+              <Container textAlign="right">
+
+                <Label basic pointing="right">sort by</Label>
+
+                <Button.Group basic compact size="mini" >
+                  <Button
+                  onClick={this.handleDate}
+                  active={sortOption === "timestamp"}
+                  content="date">
+                  </Button>
+
+                  <Button.Or text='or' />
+
+                  <Button
+                  onClick={this.handleScore}
+                  active={sortOption === "voteScore"}
+                  content="score">
+                  </Button>
+
+                </Button.Group>
+
+              </Container>
+
+
+
               {(
-                Object.keys(posts).length > 0 &&
-                  allPostIds.map(id =>
+                sortedPosts.length > 0 &&
+                  sortedAllPostIds.map(id =>
                     <DisplayPost key={id} post={posts[id]}/>
                   )
               )}
             </div>
           )}/>
 
+
+
+
+
+
+
+
+
           <Route exact path="/react" render={() => (
             <div>
               <Categories category="react" />
               {(
-                Object.keys(posts).length > 0 &&
-                  allPostIds.filter(id => posts[id]["category"] == "react").map(id =>
+                  sortedPosts.length > 0 &&
+                  sortedAllPostIds.filter(id => posts[id]["category"] == "react").map(id =>
                     <DisplayPost key={id} post={posts[id]}/>
                   )
               )}
@@ -74,8 +135,8 @@ export class App extends Component {
             <div>
               <Categories category="redux" />
               {(
-                Object.keys(posts).length > 0 &&
-                  allPostIds.filter(id => posts[id]["category"] == "redux").map(id =>
+                  sortedPosts.length > 0 &&
+                  sortedAllPostIds.filter(id => posts[id]["category"] == "redux").map(id =>
                     <DisplayPost key={id} post={posts[id]}/>
                   )
               )}
@@ -86,8 +147,8 @@ export class App extends Component {
             <div>
               <Categories category="udacity" />
               {(
-                Object.keys(posts).length > 0 &&
-                  allPostIds.filter(id => posts[id]["category"] == "udacity").map(id =>
+                  sortedPosts.length > 0 &&
+                  sortedAllPostIds.filter(id => posts[id]["category"] == "udacity").map(id =>
                     <DisplayPost key={id} post={posts[id]}/>
                   )
               )}
@@ -107,7 +168,7 @@ export class App extends Component {
 
               {(
                 Object.keys(posts).length > 0 &&
-                  allPostIds.filter(id => match.params.id == id).map(id =>
+                  sortedAllPostIds.filter(id => match.params.id == id).map(id =>
                     <DisplayPost key={id} post={posts[id]}/>
                   )
               )}

@@ -11,15 +11,13 @@ export class DisplayPost extends Component {
 
   handleClickUp = () => {
     const { id } = this.props.post
-    this.setState({ activeUp: !this.state.activeUp })
-    // console.log(id)
+    // this.setState({ activeUp: !this.state.activeUp })
     this.props.upVotePost(id)
     }
 
   handleClickDown = () => {
     const { id } = this.props.post
-    this.setState({ activeUp: !this.state.activeDown })
-    // console.log(id)
+    // this.setState({ activeDown: !this.state.activeDown })
     this.props.downVotePost(id)
     }
 
@@ -29,7 +27,7 @@ export class DisplayPost extends Component {
     const { post } = this.props
     const { activeUp, activeDown, activeTrash } = this.state
     // console.log(post)
-    console.log(this.props)
+    // console.log(this.props)
     return (
 
 
@@ -48,7 +46,6 @@ export class DisplayPost extends Component {
 
           <Button.Group basic compact size="mini">
             <Button
-            positive
             active={activeUp}
             onClick={this.handleClickUp}
             icon="chevron up">
@@ -57,7 +54,6 @@ export class DisplayPost extends Component {
             <Button.Or text={post.voteScore} />
 
             <Button
-            negative
             active={activeDown}
             onClick={this.handleClickDown}
             icon="chevron down">
