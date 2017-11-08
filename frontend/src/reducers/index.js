@@ -61,9 +61,13 @@ function appReducer (state = initialState, action) {
             }
 
         case RECEIVE_COMMENTS :
-            return {
+            let formattedComments = {}
+            comments.map(comment => {
+                formattedComments[comment.id] = comment
+            })
+        return {
                 ...state,
-                // comments
+                comments: formattedComments
             }
 
         case EDIT_POST :

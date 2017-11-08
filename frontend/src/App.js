@@ -103,7 +103,6 @@ export class App extends Component {
                     <DisplayPost key={id} post={posts[id]}/>
                   )
               )}
-              <p>Comments</p>
             </div>
           )}/>
 

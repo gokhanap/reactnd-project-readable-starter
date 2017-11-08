@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import { Route, Link, withRouter} from 'react-router-dom';
 import { upVotePost, downVotePost } from '../actions'
 import { List, Button, Segment, Header, Container } from 'semantic-ui-react'
+import ListComments from './ListComments'
 
 export class DisplayPost extends Component {
   state = {
-    activeTrash: false
+    activeTrash: false,
+    showComments: true
   }
 
   handleClickUp = () => {
@@ -25,7 +27,7 @@ export class DisplayPost extends Component {
 
   render() {
     const { post } = this.props
-    const { activeUp, activeDown, activeTrash } = this.state
+    const { activeUp, activeDown, activeTrash, showComments } = this.state
     // console.log(post)
     // console.log(this.props)
     return (
@@ -81,9 +83,16 @@ export class DisplayPost extends Component {
 
         </Container>
 
+        {(
+          showComments === true
+          &&
+          <p>hiia</p>
+        // <ListComments />
+        )}
+
+
       </Segment>
-
-
+      
 
       )
 
