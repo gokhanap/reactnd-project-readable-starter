@@ -31,8 +31,7 @@ export class App extends Component {
   render() {
     // console.log(this.props.categories)
     const { categories = [null], posts = {} } = this.props
-
-    // let sortedPosts = Object.values(posts)
+    let formattedPosts = Object.values(posts)
     // sortedPosts = sortedPosts.sort(sortBy(sortOption))
 
 
@@ -41,7 +40,8 @@ export class App extends Component {
 
 
     // console.log(categories)
-    // console.log(Object.values(posts))
+    console.log(formattedPosts.length)
+    console.log(posts)
     // console.log(sortedAllPostIds)
     return (
       <Container>
@@ -60,7 +60,7 @@ export class App extends Component {
           <Route exact path="/" render={() => (
             <div>
               <Categories category="All Posts" />
-              <ListPosts />
+              <ListPosts currentCategory="all"/>
             </div>
           )}/>
 
@@ -96,14 +96,14 @@ export class App extends Component {
           <Route exact path="/:category/:id" render={( { match } ) => (
             <div>
               <Categories />
-
+              <h1>Detail Page</h1>
               {(
-                Object.keys(posts).length > 0 &&
-                  posts.filter(id => match.params.id == id).map(id =>
+                formattedPosts.length > 0 &&
+                  formattedPosts.filter(( { id } ) => match.params.id == id).map(( { id } ) =>
                     <DisplayPost key={id} post={posts[id]}/>
                   )
               )}
-
+              <p>Comments</p>
             </div>
           )}/>
 
@@ -111,8 +111,8 @@ export class App extends Component {
             <div>
               <List celled divided relaxed>
               {(
-                posts !== {} &&
-                  posts.filter(post => match.params.id == post.id).map(post =>
+                formattedPosts.length &&
+                  formattedPosts.filter(post => match.params.id == post.id).map(post =>
                     <EditPost key={post.id} post={post}/>
                   )
               )}

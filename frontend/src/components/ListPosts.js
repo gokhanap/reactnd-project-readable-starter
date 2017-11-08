@@ -23,7 +23,7 @@ export class ListPosts extends Component {
 
     const { posts = {} } = this.props
     const { sortOption } = this.state
-    const { currentCategory = "all"} = this.props
+    const { currentCategory } = this.props
 
     let sortedPosts = Object.values(posts)
     sortedPosts = sortedPosts.sort(sortBy(sortOption)).reverse()
