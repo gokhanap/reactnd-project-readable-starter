@@ -1,49 +1,69 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { Route, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { addPost, fetchPosts, receivePosts } from '../actions'
-import { DisplayPost } from './DisplayPost'
-import { Button, List, Icon } from 'semantic-ui-react'
+import DisplayPost from './DisplayPost'
 
-
+import { Button, Container, Label } from 'semantic-ui-react'
+import sortBy from 'sort-by'
 
 export class ListPosts extends Component {
-
-  componentWillMount() {
+  state = {
+    sortOption: 'voteScore'
   }
 
+  handleDate = () => {
+    this.setState({ sortOption: 'timestamp' })
+    }
+
+  handleScore = () => {
+    this.setState({ sortOption: 'voteScore' })
+    }
+
   render() {
-    const { posts = {}, category = 'all' } = this.props
-    const allPostIds = Object.getOwnPropertyNames(posts)
-    console.log('props', this.props)
+
+    const { posts = {} } = this.props
+    const { sortOption } = this.state
+    const { currentCategory = "all"} = this.props
+
+    let sortedPosts = Object.values(posts)
+    sortedPosts = sortedPosts.sort(sortBy(sortOption)).reverse()
+    const sortedAllPostIds = sortedPosts.reduce((p,c) => [...p, c.id], [])
+
     // console.log('posts', posts)
     // console.log('category', category)
     return (
       <div>
+        <Container textAlign="right">
+          <Label basic pointing="right">sort by</Label>
+          <Button.Group basic compact size="mini" >
+            <Button
+            onClick={this.handleDate}
+            active={sortOption === "timestamp"}
+            content="date">
+            </Button>
 
+            <Button.Or text='or' />
 
-
-          {(
-            Object.keys(posts).length > 0
+            <Button
+            onClick={this.handleScore}
+            active={sortOption === "voteScore"}
+            content="score">
+            </Button>
+          </Button.Group>
+        </Container>
+        {(
+            sortedPosts.length > 0
             &&
-            allPostIds.length > 0
-            &&
-            category !== 'all'
+            currentCategory !== "all"
             ?
-            // console.log(posts['6ni6ok3ym7mf1p33lnez']['category']) &&
-            allPostIds.filter(id => posts[id]['category'] == category).map(id =>
+            sortedAllPostIds.filter(id => posts[id]["category"] === currentCategory).map(id =>
               <DisplayPost key={id} post={posts[id]}/>
             )
             :
-            allPostIds.map(id =>
+            sortedAllPostIds.map(id =>
               <DisplayPost key={id} post={posts[id]}/>
             )
-          )}
-
-
-
-
+        )}
       </div>
 
     )
@@ -51,12 +71,10 @@ export class ListPosts extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  posts: state.posts
+  posts: state.posts,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  addPost: (data) => dispatch(addPost(data)),
-  fetchPosts: (data) => dispatch(fetchPosts(data)),
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListPosts))

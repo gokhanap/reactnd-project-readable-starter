@@ -19,9 +19,6 @@ import sortBy from 'sort-by'
 
 
 export class App extends Component {
-  state = {
-    sortOption: 'voteScore'
-  }
 
   componentWillMount() {
     this.props.fetchCategories({})
@@ -30,34 +27,22 @@ export class App extends Component {
   }
 
 
-  handleDate = () => {
-    this.setState({ sortOption: 'timestamp' })
-    }
-
-  handleScore = () => {
-    this.setState({ sortOption: 'voteScore' })
-    }
-
-
-
 
   render() {
     // console.log(this.props.categories)
     const { categories = [null], posts = {} } = this.props
-    const { sortOption } = this.state
 
-    let sortedPosts = Object.values(posts)
-    sortedPosts = sortedPosts.sort(sortBy(sortOption))
+    // let sortedPosts = Object.values(posts)
+    // sortedPosts = sortedPosts.sort(sortBy(sortOption))
 
 
-    const sortedAllPostIds = sortedPosts.reduce((p,c) => [...p, c.id], [])
+    // const sortedAllPostIds = sortedPosts.reduce((p,c) => [...p, c.id], [])
 
 
 
     // console.log(categories)
     // console.log(Object.values(posts))
     // console.log(sortedAllPostIds)
-    console.log(sortedPosts.length)
     return (
       <Container>
         <Header textAlign="center" icon>
@@ -75,83 +60,29 @@ export class App extends Component {
           <Route exact path="/" render={() => (
             <div>
               <Categories category="All Posts" />
-
-
-              <Container textAlign="right">
-
-                <Label basic pointing="right">sort by</Label>
-
-                <Button.Group basic compact size="mini" >
-                  <Button
-                  onClick={this.handleDate}
-                  active={sortOption === "timestamp"}
-                  content="date">
-                  </Button>
-
-                  <Button.Or text='or' />
-
-                  <Button
-                  onClick={this.handleScore}
-                  active={sortOption === "voteScore"}
-                  content="score">
-                  </Button>
-
-                </Button.Group>
-
-              </Container>
-
-
-
-              {(
-                sortedPosts.length > 0 &&
-                  sortedAllPostIds.map(id =>
-                    <DisplayPost key={id} post={posts[id]}/>
-                  )
-              )}
+              <ListPosts />
             </div>
           )}/>
-
-
-
-
-
-
-
 
 
           <Route exact path="/react" render={() => (
             <div>
               <Categories category="react" />
-              {(
-                  sortedPosts.length > 0 &&
-                  sortedAllPostIds.filter(id => posts[id]["category"] == "react").map(id =>
-                    <DisplayPost key={id} post={posts[id]}/>
-                  )
-              )}
+              <ListPosts currentCategory="react"/>
             </div>
           )}/>
 
           <Route exact path="/redux" render={() => (
             <div>
               <Categories category="redux" />
-              {(
-                  sortedPosts.length > 0 &&
-                  sortedAllPostIds.filter(id => posts[id]["category"] == "redux").map(id =>
-                    <DisplayPost key={id} post={posts[id]}/>
-                  )
-              )}
+              <ListPosts currentCategory="redux"/>
             </div>
           )}/>
 
           <Route exact path="/udacity" render={() => (
             <div>
               <Categories category="udacity" />
-              {(
-                  sortedPosts.length > 0 &&
-                  sortedAllPostIds.filter(id => posts[id]["category"] == "udacity").map(id =>
-                    <DisplayPost key={id} post={posts[id]}/>
-                  )
-              )}
+              <ListPosts currentCategory="udacity"/>
             </div>
           )}/>
 
@@ -168,7 +99,7 @@ export class App extends Component {
 
               {(
                 Object.keys(posts).length > 0 &&
-                  sortedAllPostIds.filter(id => match.params.id == id).map(id =>
+                  posts.filter(id => match.params.id == id).map(id =>
                     <DisplayPost key={id} post={posts[id]}/>
                   )
               )}
