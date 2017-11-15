@@ -1,74 +1,144 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Link, withRouter} from 'react-router-dom';
-import { upVoteComment, downVoteComment } from '../actions'
-import { Label, Icon, Button, Comment, Form, Segment, Header, Container, Divider } from 'semantic-ui-react'
+import { withRouter} from 'react-router-dom';
+import { upVoteCommentAPI, downVoteCommentAPI } from '../actions'
+import { Label, Icon, Comment, Form, Segment, Divider } from 'semantic-ui-react'
+import { editCommentAPI } from '../actions'
 
 export class DisplayComment extends Component {
   state = {
-    activeTrash: false,
+    editMode: false
+  }
+
+  handleOnChange = (e, { name, value }) => {
+    this.setState({
+      comment: {
+        ...this.state.comment,
+        [name]: value
+      }
+    })
+  }
+
+  componentWillMount() {
+    this.setState({
+      comment: {
+        ...this.state.comment,
+        ...this.props.comment
+      }
+    })
   }
 
   handleClickUp = () => {
     const { id } = this.props.comment
     // this.setState({ activeUp: !this.state.activeUp })
-    this.props.upVoteComment(id)
+    this.props.upVoteCommentAPI(id)
     }
 
   handleClickDown = () => {
     const { id } = this.props.comment
     // this.setState({ activeDown: !this.state.activeDown })
-    this.props.downVoteComment(id)
+    this.props.downVoteCommentAPI(id)
     }
 
-  handleClickEdit = () => {
+  handleClickEditMode = () => {
+    this.setState({ editMode: !this.state.editMode })
     }
 
-  handleClickTrash = () => this.setState({ activeTrash: !this.state.activeTrash })
+  handleClickSubmit = () => {
+    const { editCommentAPI } = this.props
+    const comment = { ...this.state.comment }
+    comment.timestamp = Date.now()
+
+    editCommentAPI(comment)
+    this.handleClickEditMode()
+    }
+
+  handleClickTrash = () => {
+    const { editCommentAPI } = this.props
+    const comment = { ...this.state.comment }
+    comment.deleted = true
+    editCommentAPI(comment)
+  }
 
   render() {
     const { comment } = this.props
-    const { activeUp, activeDown, activeTrash, showComments } = this.state
+    const { editMode } = this.state
 
     const date = new Date(comment.timestamp).toLocaleString()
-    // console.log(post)
-    // console.log(this.props)
-    return (
-      activeTrash !== true &&
-      <div>
-        <Comment>
-          <Comment.Content>
-            <Comment.Author as="a" disabled>{comment.author}</Comment.Author>
-            <Comment.Metadata>{date}</Comment.Metadata>
-            <Comment.Text>{comment.body}</Comment.Text>
-            <Comment.Actions>
-              <Segment basic compact clearing >
-                  <Icon link
-                  name='chevron up'
-                  onClick={this.handleClickUp}/>
 
-                  <Label circular>
-                  {comment.voteScore}
-                  </Label>
+    if (editMode) {
+    const { comment } = this.state
+      return (
+        <div>
+        <Segment secondary>
+          <Form size="tiny" onSubmit={this.handleOnSubmit} >
+{/*              <Form.TextArea
+              label="Edit Author"
+              name="author"
+              value={comment.author}
+              onChange={this.handleOnChange}
+              autoHeight
+              rows={1} />*/}
 
-                  <Icon link
-                  name='chevron down'
-                  onClick={this.handleClickDown}/>
+              <Form.TextArea
+              label="Edit Body"
+              name="body"
+              value={comment.body}
+              onChange={this.handleOnChange}
+              autoHeight
+              rows={1} />
 
-                  <Icon link
-                  name='edit'
-                  onClick={this.handleClickEdit}/>
-
-                  <Icon link
-                  name='trash'
-                  onClick={this.handleClickTrash}/>
-              </Segment>
-            </Comment.Actions>
-          </Comment.Content>
-        </Comment>
-        <Divider />
-      </div>
+            <Form.Group>
+              <Form.Button size="tiny" color="teal" onClick={this.handleClickSubmit}>Submit</Form.Button>
+              <Form.Button size="tiny" color="red" onClick={this.handleClickEditMode}>Cancel</Form.Button>
+            </Form.Group>
+          </Form>
+        </Segment>
+          <Divider />
+        </div>
       )
+
+    } else {
+
+      return (
+        comment.deleted !== true &&
+
+          <div>
+          <Comment>
+            <Comment.Content>
+              <Comment.Author >{comment.author}</Comment.Author>
+              <Comment.Metadata>{date}</Comment.Metadata>
+              <Comment.Text>{comment.body}</Comment.Text>
+              <Comment.Actions>
+                <Segment basic compact clearing >
+                    <Icon link
+                    name='chevron up'
+                    onClick={this.handleClickUp}/>
+
+                    <Label circular>
+                    {comment.voteScore}
+                    </Label>
+
+                    <Icon link
+                    name='chevron down'
+                    onClick={this.handleClickDown}/>
+
+                    <Icon link
+                    name='edit'
+                    onClick={this.handleClickEditMode}/>
+
+                    <Icon link
+                    name='trash'
+                    onClick={this.handleClickTrash}/>
+                </Segment>
+              </Comment.Actions>
+            </Comment.Content>
+          </Comment>
+          <Divider />
+        </div>
+      )
+
+    }
 
   }
 }
@@ -76,8 +146,9 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  upVoteComment: (id) => dispatch(upVoteComment(id)),
-  downVoteComment: (id) => dispatch(downVoteComment(id))
+  upVoteCommentAPI: (id) => dispatch(upVoteCommentAPI(id)),
+  downVoteCommentAPI: (id) => dispatch(downVoteCommentAPI(id)),
+  editCommentAPI: (comment) => dispatch(editCommentAPI(comment))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DisplayComment))

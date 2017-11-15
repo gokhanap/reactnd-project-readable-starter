@@ -1,38 +1,44 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Link, withRouter} from 'react-router-dom';
-import { upVotePost, downVotePost } from '../actions'
+import { upVotePostAPI, downVotePostAPI } from '../actions'
 import { Button, Segment, Header, Container } from 'semantic-ui-react'
 import ListComments from './ListComments'
+import { deletePostAPI, fetchComments } from '../actions'
 
 export class DisplayPost extends Component {
   state = {
-    activeTrash: false,
   }
 
   handleClickUp = () => {
     const { id } = this.props.post
     // this.setState({ activeUp: !this.state.activeUp })
-    this.props.upVotePost(id)
+    this.props.upVotePostAPI(id)
     }
 
   handleClickDown = () => {
     const { id } = this.props.post
     // this.setState({ activeDown: !this.state.activeDown })
-    this.props.downVotePost(id)
+    this.props.downVotePostAPI(id)
     }
 
-  handleClickTrash = () => this.setState({ activeTrash: !this.state.activeTrash })
+  handleClickTrash = () => {
+    const { deletePostAPI, post } = this.props
+    deletePostAPI(post.id)
+  }
+
+  componentWillMount() {
+    this.props.fetchComments(this.props.post.id)
+  }
 
   render() {
     const { post, showComments = false } = this.props
-    const { activeUp, activeDown, activeTrash } = this.state
-    // console.log(post)
+    // console.log(typeof post)
     // console.log(this.props)
     return (
 
-
-      activeTrash !== true &&
+      // typeof post !== "undefined" &&
+      post.deleted !== true &&
       <Segment>
         <Container>
           <Header
@@ -47,7 +53,6 @@ export class DisplayPost extends Component {
 
           <Button.Group basic compact size="mini">
             <Button
-            active={activeUp}
             onClick={this.handleClickUp}
             icon="chevron up">
             </Button>
@@ -55,32 +60,30 @@ export class DisplayPost extends Component {
             <Button.Or text={post.voteScore} />
 
             <Button
-            active={activeDown}
             onClick={this.handleClickDown}
             icon="chevron down">
             </Button>
           </Button.Group>
 
           <Button.Group basic compact size="mini">
-            <Button floated="right"
+            <Button
             icon="write"
             as={Link}
             to={`/${post.category}/${post.id}/edit`}>
             </Button>
 
-            <Button floated="right"
-            active={activeTrash}
+            <Button
             onClick={this.handleClickTrash}
             icon="trash">
             </Button>
 
-            <Button floated="right"
+            <Button
             content="comments"
             icon="comments"
             label={{ basic: true, pointing: 'left', content: `${post.commentCount}` }}
-            />
+            as={Link}
+            to={`/${post.category}/${post.id}`}/>
           </Button.Group>
-
 
         </Container>
 
@@ -90,20 +93,19 @@ export class DisplayPost extends Component {
         <ListComments parentId={post.id}/>
         )}
 
-
       </Segment>
 
-
       )
-
   }
 }
 const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  upVotePost: (id) => dispatch(upVotePost(id)),
-  downVotePost: (id) => dispatch(downVotePost(id))
+  upVotePostAPI: (id) => dispatch(upVotePostAPI(id)),
+  downVotePostAPI: (id) => dispatch(downVotePostAPI(id)),
+  deletePostAPI: (id) => dispatch(deletePostAPI(id)),
+  fetchComments: (data) => dispatch(fetchComments(data))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DisplayPost))

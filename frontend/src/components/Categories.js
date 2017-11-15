@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { addPost, fetchCategories, receiveCategories } from '../actions'
+import { addPost, fetchCategories } from '../actions'
 import { Menu } from 'semantic-ui-react'
 
 
@@ -55,7 +55,7 @@ export class Categories extends Component {
           content="Add Post"
           onClick={this.handleItemClick}
           as={Link}
-          to="./addpost"
+          to="/addpost"
         />
 
       </Menu>

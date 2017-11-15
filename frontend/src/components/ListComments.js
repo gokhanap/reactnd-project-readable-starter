@@ -2,54 +2,96 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import DisplayComment from './DisplayComment'
-
-import { Button, Container, Label, Comment, Header, Form, Segment, Divider } from 'semantic-ui-react'
-import sortBy from 'sort-by'
+import { addCommentAPI } from '../actions'
+import { Button, Comment, Form, Segment } from 'semantic-ui-react'
 
 export class ListComments extends Component {
   state = {
-    newcomment: 'Add'
+    newComment: {
+      id: "",
+      parentId: "",
+      timestamp: "",
+      body: "",
+      author: "",
+      voteScore: 1,
+      deleted: false,
+      parentDeleted: false
+    }
   }
 
-  handleOnChange = (e, { value }) => {
-    console.log(value)
-    this.setState({ newcomment: value })
+  handleOnChange = (e, { name, value }) => {
+    this.setState({
+      newComment: {
+        ...this.state.newComment,
+        [name]: value
+      }
+    })
     }
+
+  handleOnSubmit = () => {
+    const { addCommentAPI, parentId } = this.props
+    const { makeId, clearForm } = this
+
+    const preparedComment = { ...this.state.newComment }
+    preparedComment.id = makeId()
+    preparedComment.timestamp = Date.now()
+    preparedComment.parentId = parentId
+    addCommentAPI(preparedComment)
+    clearForm()
+  }
+
+  makeId = () => {
+    const generateId = a => a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,generateId)
+    return generateId()
+  }
+
+  clearForm = () => {
+    this.setState({
+      newComment: {
+        ...this.state.newComment,
+        author: '',
+        body: ''
+      }
+    })
+  }
 
   render() {
 
     const { parentId, comments = {} } = this.props
-    const { sortOption } = this.state
-    const { currentCategory } = this.props
-
+    const { body, author } = this.state.newComment
     let commentsArr = Object.values(comments)
 
-    // console.log('props', this.props)
-    // console.log('comments', comments.length)
-    // console.log('comments', comments)
-    // console.log('category', category)
     return (
 
       <Segment>
-        {(
-          commentsArr.length > 0
+        <Comment.Group minimal>
+
+          {(commentsArr.length > 0
           &&
           (
-            <Comment.Group minimal>
+            commentsArr.filter(comment => comment.parentId === parentId).map(comment =>
+              <DisplayComment key={comment.id} comment={comment}/>
+            )
+          )
+          )}
+              <Form onSubmit={this.handleOnSubmit} reply>
+                <Form.TextArea
+                name="body"
+                value={body}
+                onChange={this.handleOnChange}
+                placeholder='Write comment here...' />
 
-              {commentsArr.filter(comment => comment.parentId === parentId).map(comment =>
-                <DisplayComment key={comment.id} comment={comment}/>
-              )}
+                <Form.TextArea
+                name="author"
+                value={author}
+                onChange={this.handleOnChange}
+                autoHeight
+                rows={1}
+                placeholder='Write author name here' />
 
-
-              <Form reply>
-                <Form.TextArea value={this.state.newcomment} onChange={this.handleOnChange}/>
                 <Button content='Add Reply' labelPosition='left' icon='write' color="teal" />
               </Form>
-
             </Comment.Group>
-          )
-        )}
       </Segment>
 
     )
@@ -61,6 +103,7 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  addCommentAPI: (comment) => dispatch(addCommentAPI(comment))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListComments))

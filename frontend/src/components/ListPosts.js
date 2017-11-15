@@ -20,19 +20,19 @@ export class ListPosts extends Component {
     }
 
   render() {
-
     const { posts = {} } = this.props
     const { sortOption } = this.state
     const { currentCategory } = this.props
 
     let sortedPosts = Object.values(posts)
     sortedPosts = sortedPosts.sort(sortBy(sortOption)).reverse()
-    const sortedAllPostIds = sortedPosts.reduce((p,c) => [...p, c.id], [])
+    let sortedAllPostIds = sortedPosts.reduce((p,c) => [...p, c.id], [])
 
     // console.log('posts', posts)
     // console.log('category', category)
-    console.log('sortedPosts', sortedPosts.length)
-    console.log('sortedPosts', sortedPosts)
+    // console.log('sortedPosts', sortedPosts.length)
+    // console.log('sortedPosts', sortedPosts)
+    // console.log('sortedAllPost', sortedAllPostIds)
     return (
       <div>
         <Container textAlign="right">

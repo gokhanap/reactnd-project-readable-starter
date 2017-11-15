@@ -1,10 +1,9 @@
 import {
     ADD_POST,
     EDIT_POST,
-    REMOVE_POST,
+    DELETE_POST,
     ADD_COMMENT,
     EDIT_COMMENT,
-    DELETE_COMMENT,
     RECEIVE_CATEGORIES,
     RECEIVE_POSTS,
     RECEIVE_COMMENTS,
@@ -16,23 +15,11 @@ import {
 
 let initialState = {}
 
-// const fromapi = (theAPI.getPosts().then(data => console.log(data)))
-
 function appReducer (state = initialState, action) {
 
-    const { post, id, categories, posts, comments, title, body } = action
+    const { post, id, categories, posts, comments, comment } = action
 
     switch (action.type) {
-
-        // case RECEIVE_CATEGORIES :
-        //     let newcategories = {}
-        //     categories.map(category => {
-        //         newcategories[category.name] = category
-        //     })
-        //     return {
-        //         ...state,
-        //         categories: newcategories
-        //     }
 
         case RECEIVE_CATEGORIES :
             return {
@@ -47,7 +34,10 @@ function appReducer (state = initialState, action) {
             })
             return {
                 ...state,
-                posts: formattedPosts
+                posts: {
+                    ...state.posts,
+                    ...formattedPosts
+                }
             }
 
         case RECEIVE_COMMENTS :
@@ -57,17 +47,79 @@ function appReducer (state = initialState, action) {
             })
         return {
                 ...state,
-                comments: formattedComments
+                comments: {
+                    ...state.comments,
+                    ...formattedComments
+                }
+            }
+
+
+        case ADD_POST :
+            return {
+                ...state,
+                posts: {
+                    ...state.posts,
+                    [post.id]: {
+                        ...post,
+                        voteScore: 1,
+                        deleted: false,
+                        commentCount: 0
+                    }
+                }
             }
 
         case EDIT_POST :
+            return {
+                ...state,
+                posts: {
+                    ...state.posts,
+                    [post.id]: {
+                        ...post,
+                    }
+                }
+            }
 
-            // let newpost = state.posts.filter(post => post.id === id);
-            // newpost[body] = body,
-            console.log(id)
+        case DELETE_POST :
+            return {
+                ...state,
+                posts: {
+                    ...state.posts,
+                    [id]: {
+                        ...state.posts[id],
+                        deleted: true
+                    }
+                }
+            }
 
-            return {}
+        case ADD_COMMENT :
+        let newCommentCount = state.posts[comment.parentId].commentCount += 1
+            return {
+                ...state,
+                comments: {
+                    ...state.comments,
+                    [comment.id]: {
+                        ...comment
+                    }
+                },
+                posts: {
+                    ...state.posts,
+                    [comment.parentId]: {
+                        ...state.posts[comment.parentId],
+                        commentCount: newCommentCount
+                    }
+                }
+            }
 
+        case EDIT_COMMENT :
+            return {
+                ...state,
+                comments: {
+                    ...state.comments,
+                    [comment.id]: {
+                        ...comment,
+                    }
+                }
+            }
 
         case UPVOTE_POST :
         let upNewPostScore = state.posts[id].voteScore += 1
@@ -120,23 +172,6 @@ function appReducer (state = initialState, action) {
                     }
                 }
             }
-
-
-        // case 'ADD_RECIPE' :
-        //     return {
-        //         ...state,
-        //         [day]: {
-        //             ...state[day],
-        //             [meal]: recipe.label
-        //         }
-        //     }
-
-        // case ADD_POST:
-        //     return Object.assign({}, state, {user: action.user})
-
-        // case REMOVE_POST:
-        //     let newstate = state.filter(post => post.id !== action.post.id)
-        //     return newstate
 
         default:
             return state

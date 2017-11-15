@@ -1,21 +1,16 @@
 import React, { Component } from 'react'
-import { Route, withRouter, Switch, Link } from 'react-router-dom'
-// import logo from './logo.svg'
+import { Link, Route, withRouter, Switch } from 'react-router-dom'
 import './App.css'
-import * as theAPI from './theAPI.js'
 
 import Categories from './components/Categories'
 import ListPosts from './components/ListPosts'
 import DisplayPost from './components/DisplayPost'
-import EditPost from './components/EditPost'
-import AddPost from './components/AddPost'
+import PostEditor from './components/PostEditor'
 
 import { connect } from 'react-redux'
-import { fetchCategories, fetchPosts, fetchComments } from './actions'
+import { fetchCategories, fetchPosts } from './actions'
 
-import { Icon, List, Button, Segment, Header, Container, Label } from 'semantic-ui-react'
-
-import sortBy from 'sort-by'
+import { Icon, Header, Container , Button, Divider} from 'semantic-ui-react'
 
 
 export class App extends Component {
@@ -23,39 +18,21 @@ export class App extends Component {
   componentWillMount() {
     this.props.fetchCategories({})
     this.props.fetchPosts({})
-    this.props.fetchComments("8xf0y6ziyjabvozdd253nd")
   }
 
-
-
   render() {
-    // console.log(this.props.categories)
-    const { categories = [null], posts = {} } = this.props
+    const { posts = {} } = this.props
     let formattedPosts = Object.values(posts)
-    // sortedPosts = sortedPosts.sort(sortBy(sortOption))
 
-
-    // const sortedAllPostIds = sortedPosts.reduce((p,c) => [...p, c.id], [])
-
-
-
-    // console.log(categories)
-    // console.log(formattedPosts.length)
-    // console.log(posts)
-    // console.log(sortedAllPostIds)
     return (
       <Container>
         <Header textAlign="center" icon>
           <Icon name='comments outline' color="teal" />
           <Header.Content color="teal" content="Readable" />
           <Header.Subheader color="teal" content="App" />
-
         </Header>
 
-
         <Switch>
-
-
 
           <Route exact path="/" render={() => (
             <div>
@@ -63,7 +40,6 @@ export class App extends Component {
               <ListPosts currentCategory="all"/>
             </div>
           )}/>
-
 
           <Route exact path="/react" render={() => (
             <div>
@@ -89,7 +65,7 @@ export class App extends Component {
           <Route exact path="/addpost" render={() => (
             <div>
               <Categories category="Add Post" />
-              <AddPost />
+              <PostEditor submit="add" />
             </div>
           )}/>
 
@@ -98,7 +74,7 @@ export class App extends Component {
               <Categories />
               {(
                 formattedPosts.length > 0 &&
-                  formattedPosts.filter(( { id } ) => match.params.id == id).map(( { id } ) =>
+                  formattedPosts.filter(( { id } ) => match.params.id === id).map(( { id } ) =>
                     <DisplayPost key={id} post={posts[id]} showComments={true}/>
                   )
               )}
@@ -107,20 +83,24 @@ export class App extends Component {
 
         <Route exact path="/:category/:id/edit" render={( { match } ) => (
             <div>
-              <List celled divided relaxed>
+
               {(
-                formattedPosts.length &&
-                  formattedPosts.filter(post => match.params.id == post.id).map(post =>
-                    <EditPost key={post.id} post={post}/>
-                  )
+                formattedPosts.length > 0 &&
+              <PostEditor key={posts[match.params.id]['id']} post={posts[match.params.id]} submit="edit" />
               )}
-              </List>
+
             </div>
         )}/>
 
           <Route render={() => (
-            <h2>404 not found</h2>
+            <Container textAlign='center'>
+              <Divider section />
+              <Header as='h1'>404 not found</Header>
+              <Divider section />
+              <Button as={Link} to="/" color='teal'>Let's start again</Button>
+            </Container>
           )}/>
+
         </Switch>
 
       </Container>
@@ -137,7 +117,6 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchCategories: (data) => dispatch(fetchCategories(data)),
   fetchPosts: (data) => dispatch(fetchPosts(data)),
-  fetchComments: (data) => dispatch(fetchComments(data))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
