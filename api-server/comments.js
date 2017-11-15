@@ -23,7 +23,27 @@ const defaultData = {
     voteScore: -5,
     deleted: false,
     parentDeleted: false
-  }
+  },
+  "26ea458a-21be-4224-8ac4-f97733b9c9db": {
+    id: '26ea458a-21be-4224-8ac4-f97733b9c9db',
+    parentId: "2ba396f8-c03d-4401-a979-bbb24b52a64b",
+    timestamp: 1510770712998,
+    body: 'for more... https://tylermcginnis.com/react-aha-moments/',
+    author: 'tylermcginnis',
+    voteScore: 3,
+    deleted: false,
+    parentDeleted: false
+  },
+  "c9e51d97-a8b6-4c16-902f-bc37485577e0": {
+    id: 'c9e51d97-a8b6-4c16-902f-bc37485577e0',
+    parentId: "2ba396f8-c03d-4401-a979-bbb24b52a64b",
+    timestamp: 1510770841494,
+    body: 'Aha',
+    author: 'gokhan',
+    voteScore: 2,
+    deleted: false,
+    parentDeleted: false
+  },
 }
 
 function getData (token) {

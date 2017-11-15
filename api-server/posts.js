@@ -24,6 +24,50 @@ const defaultData = {
     voteScore: -5,
     deleted: false,
     commentCount: 0
+  },
+  "1b6f9e58-ea67-4889-b5f3-1d4ea3085a63": {
+    id: '1b6f9e58-ea67-4889-b5f3-1d4ea3085a63',
+    timestamp: 1510769958506,
+    title: '5 Quotes About Sociology and UX Design',
+    body: 'Why sociologists, artists, and anthropologists make great UX Designers, and why you should embrace lifelong learning if you’re a GenXer',
+    author: 'udacity',
+    category: 'udacity',
+    voteScore: 2,
+    deleted: false,
+    commentCount: 0
+  },
+  "2ba396f8-c03d-4401-a979-bbb24b52a64b": {
+    id: '2ba396f8-c03d-4401-a979-bbb24b52a64b',
+    timestamp: 1510770169992,
+    title: 'React "Aha" Moments',
+    body: 'One of my main goals whenever I’m teaching or writing technical content is to maximize “aha” moments. An “aha” moment is a moment of sudden insight or clarity; when the subject matter suddenly makes sense. We’ve all experienced them and the best teachers I know are able to understand their audience and adapt the lesson in order to maximize these moments. Throughout the last few years I’ve taught React in just about every popular medium. Throughout that time I’ve been taking notes on what triggers these “aha” moments, specifically for learning React. About two weeks ago I came across this Reddit thread which had the same idea. So what I want to do in this post is share my collection of these moments while also adding my thoughts on some of the moments shared in that Reddit thread. Hopefully it will help React “click” for you if it hasn’t yet.',
+    author: 'tylermcginnis',
+    category: 'react',
+    voteScore: 12,
+    deleted: false,
+    commentCount: 2
+  },
+  "2d6a9c0b-9d9d-437a-b82e-c62392fbee69": {
+    id: '2d6a9c0b-9d9d-437a-b82e-c62392fbee69',
+    timestamp: 1510770313595,
+    title: 'You’re Missing the Point of React',
+    body: 'I’ve seen React misunderstood by smart people more often than any other JavaScript library. React is packed with ideas that were radical at the time of its introduction. This created an air of controversy that still hasn’t quite dissolved. After a year of using React and observing people learning it, I can say that the best parts of React are not the ones that made it famous. They’re not virtual DOM, custom event system, server rendering or JSX. Rather, they are a few boring, old and powerful ideas.',
+    author: 'Dan Abramov',
+    category: 'react',
+    voteScore: 8,
+    deleted: false,
+    commentCount: 0
+  },
+  "f1703fee-7055-45b3-96b0-ecbae9313d4f": {
+    id: 'f1703fee-7055-45b3-96b0-ecbae9313d4f',
+    timestamp: 1510770570739,
+    title: 'Step by Step Guide To Building React Redux Apps',
+    body: 'Redux is becoming the de facto way to build React apps. And there are tons of examples that show how it’s done. But React-Redux apps have too many parts like: “Reducers”, “Actions”, “Action Creators”, “State”, “Middleware” and more). It could be overwhelming! When I started to learn it, I couldn’t find blogs that show “Which part of React Redux to build first?” or how to generally approach building any React-Redux apps. So I went through several example and blogs and came out with general steps as to how to approach building most React Redux Apps.',
+    author: 'rajaraodv',
+    category: 'redux',
+    voteScore: 5,
+    deleted: false,
+    commentCount: 0
   }
 }
 
