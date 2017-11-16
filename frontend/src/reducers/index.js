@@ -4,6 +4,7 @@ import {
     DELETE_POST,
     ADD_COMMENT,
     EDIT_COMMENT,
+    DELETE_COMMENT,
     RECEIVE_CATEGORIES,
     RECEIVE_POSTS,
     RECEIVE_COMMENTS,
@@ -17,7 +18,7 @@ let initialState = {}
 
 function appReducer (state = initialState, action) {
 
-    const { post, id, categories, posts, comments, comment } = action
+    const { post, id, parentId, categories, posts, comments, comment } = action
 
     switch (action.type) {
 
@@ -117,6 +118,26 @@ function appReducer (state = initialState, action) {
                     ...state.comments,
                     [comment.id]: {
                         ...comment,
+                    }
+                }
+            }
+
+        case DELETE_COMMENT :
+        let updatedCommentCount = state.posts[parentId].commentCount -= 1
+            return {
+                ...state,
+                comments: {
+                    ...state.comments,
+                    [id]: {
+                        ...state.comments[id],
+                        deleted: true
+                    }
+                },
+                posts: {
+                    ...state.posts,
+                    [parentId]: {
+                        ...state.posts[parentId],
+                        commentCount: updatedCommentCount
                     }
                 }
             }

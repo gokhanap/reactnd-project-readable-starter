@@ -43,7 +43,7 @@ export class Categories extends Component {
             content={category.name.charAt(0).toUpperCase() + category.name.slice(1)}
             onClick={this.handleItemClick}
             as={Link}
-            to={`/${category.path}`}
+            to={`/${category.path}/`}
           />
 
         )}

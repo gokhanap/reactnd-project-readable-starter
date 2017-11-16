@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Grid, Divider, Form, Message } from 'semantic-ui-react'
+import { Grid, Divider, Form, Message, Select } from 'semantic-ui-react'
 import { withRouter, Redirect} from 'react-router-dom';
 import { connect } from 'react-redux'
 import { addPostAPI, editPostAPI } from '../actions'
 
 export class PostEditor extends Component {
   state = {
-    // activeTrash: false,
     categories: [
       {key:"react", value:"react", text:"React"},
       {key:"redux", value:"redux", text:"Redux"},
@@ -20,7 +19,9 @@ export class PostEditor extends Component {
       timestamp: "",
       id: ""
     },
-    success: false
+    success: false,
+    isCategorySelected: false,
+    displayError: false,
   }
 
   handleOnChange = (e, { name, value }) => {
@@ -30,13 +31,18 @@ export class PostEditor extends Component {
         [name]: value
       }
     })
+    name === "category" &&
+    this.setState({
+      isCategorySelected: true,
+      displayError: false
+    })
   }
 
   handleOnSubmit = () => {
-    const { post } = this.state
+    const { post, isCategorySelected } = this.state
     const { addPostAPI, editPostAPI, submit} = this.props
 
-    if (submit === "add") {
+    if (submit === "add" && isCategorySelected) {
       const newpost = { ...post }
       newpost.id = this.makeId()
       this.setState({
@@ -48,9 +54,15 @@ export class PostEditor extends Component {
       newpost.timestamp = Date.now()
       addPostAPI(newpost)
       this.makeSuccess()
-    } else {
+    }
+    else if (submit === "edit") {
       editPostAPI(post)
       this.makeSuccess()
+    }
+    else if (!isCategorySelected) {
+      this.setState({
+        displayError: true
+      })
     }
   }
 
@@ -77,7 +89,7 @@ export class PostEditor extends Component {
 
   render() {
     const { title, body, category, author, id } = this.state.post
-    const { categories } = this.state
+    const { categories, isCategorySelected, displayError } = this.state
     const { submit } = this.props
 
     return (
@@ -112,28 +124,29 @@ export class PostEditor extends Component {
             placeholder='Write body for the post'
             style={{ minHeight: 100 }} />
 
-            <Form.Select selection required
+
+            <Form.Field error={displayError} required
+            control={Select}
             placeholder="Select category"
             name="category"
+            label="Category"
             value={category}
             options={categories}
             onChange={this.handleOnChange}/>
+
+            {displayError &&
+              <Message negative>
+                <Message.Header>Please select a category</Message.Header>
+                <p>A post without a category can not be submitted.</p>
+              </Message>
+            }
 
             <Form.Button>Submit</Form.Button>
 
             { this.state.success &&
               <Redirect to={`/${category}/${id}`}/>
             }
-            <Message
-              success
-              header='Post Added'
-              content="Your post added successfully."
-            />
-            <Message
-              error
-              header='Error'
-              content='Please try again later.'
-            />
+
           </Form>
         </Grid.Column>
         <Grid.Column width={3} />

@@ -23,7 +23,6 @@ export const getPosts = () =>
 export const getComments = (id) =>
   fetch(`${api}/posts/${id}/comments`, initGET)
   .then(res => res.json())
-  // .then(res => console.log(res))
 
 
 export const addPostAPI = (post) =>
@@ -33,7 +32,6 @@ export const addPostAPI = (post) =>
     headers
     })
   .then(res => res.json())
-  // .then(res => console.log("APIresult:",res))
 
 
 export const editPostAPI = (id, post) =>
@@ -43,7 +41,6 @@ export const editPostAPI = (id, post) =>
     headers
     })
   .then(res => res.json())
-  // .then(res => console.log("APIresult:",res))
 
 
 export const deletePostAPI = (id) =>
@@ -53,7 +50,6 @@ export const deletePostAPI = (id) =>
     headers
     })
   .then(res => res.json())
-  // .then(res => console.log("APIresult:",res))
 
 
 export const addCommentAPI = (comment) =>
@@ -63,13 +59,21 @@ export const addCommentAPI = (comment) =>
     headers
     })
   .then(res => res.json())
-  // .then(res => console.log("APIresult:",res))
 
 
 export const editCommentAPI = (id, comment) =>
   fetch(`${api}/comments/${comment.id}`, {
     method: 'PUT',
     body: JSON.stringify( {id, comment} ),
+    headers
+    })
+  .then(res => res.json())
+
+
+export const deleteCommentAPI = (id) =>
+  fetch(`${api}/comments/${id}`, {
+    method: 'DELETE',
+    body: JSON.stringify( id ),
     headers
     })
   .then(res => res.json())
@@ -83,7 +87,6 @@ export const upVotePostAPI = (id, option) =>
     headers
     })
   .then(res => res.json())
-  // .then(res => console.log("APIresult:",res))
 
 
 export const downVotePostAPI = (id, option) =>
@@ -93,7 +96,6 @@ export const downVotePostAPI = (id, option) =>
     headers
     })
   .then(res => res.json())
-  // .then(res => console.log("APIresult:",res))
 
 
 export const upVoteCommentAPI = (id, option) =>
@@ -103,7 +105,6 @@ export const upVoteCommentAPI = (id, option) =>
     headers
     })
   .then(res => res.json())
-  // .then(res => console.log("APIresult:",res))
 
 
 export const downVoteCommentAPI = (id, option) =>
@@ -113,4 +114,3 @@ export const downVoteCommentAPI = (id, option) =>
     headers
     })
   .then(res => res.json())
-  // .then(res => console.log("APIresult:",res))

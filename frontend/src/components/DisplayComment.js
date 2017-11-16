@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter} from 'react-router-dom';
 import { upVoteCommentAPI, downVoteCommentAPI } from '../actions'
 import { Label, Icon, Comment, Form, Segment, Divider } from 'semantic-ui-react'
-import { editCommentAPI } from '../actions'
+import { editCommentAPI, deleteCommentAPI } from '../actions'
 
 export class DisplayComment extends Component {
   state = {
@@ -30,13 +30,11 @@ export class DisplayComment extends Component {
 
   handleClickUp = () => {
     const { id } = this.props.comment
-    // this.setState({ activeUp: !this.state.activeUp })
     this.props.upVoteCommentAPI(id)
     }
 
   handleClickDown = () => {
     const { id } = this.props.comment
-    // this.setState({ activeDown: !this.state.activeDown })
     this.props.downVoteCommentAPI(id)
     }
 
@@ -54,10 +52,8 @@ export class DisplayComment extends Component {
     }
 
   handleClickTrash = () => {
-    const { editCommentAPI } = this.props
-    const comment = { ...this.state.comment }
-    comment.deleted = true
-    editCommentAPI(comment)
+    const { id, parentId } = this.props.comment
+    this.props.deleteCommentAPI(id, parentId)
   }
 
   render() {
@@ -148,7 +144,8 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch) => ({
   upVoteCommentAPI: (id) => dispatch(upVoteCommentAPI(id)),
   downVoteCommentAPI: (id) => dispatch(downVoteCommentAPI(id)),
-  editCommentAPI: (comment) => dispatch(editCommentAPI(comment))
+  editCommentAPI: (comment) => dispatch(editCommentAPI(comment)),
+  deleteCommentAPI: (id) => dispatch(deleteCommentAPI(id))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DisplayComment))

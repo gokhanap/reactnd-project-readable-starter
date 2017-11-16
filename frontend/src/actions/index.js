@@ -114,6 +114,18 @@ export const editCommentAPI = comment => dispatch => (
 )
 
 
+export const deleteComment = (id, parentId) => ({
+    type: DELETE_COMMENT,
+    id, parentId
+})
+
+export const deleteCommentAPI = (id) => dispatch => (
+  theAPI
+      .deleteCommentAPI(id)
+      .then(res => dispatch(deleteComment(id, res.parentId)))
+)
+
+
 export const upVotePost = id =>({
   type: UPVOTE_POST,
   id

@@ -21,7 +21,7 @@ export class App extends Component {
   }
 
   render() {
-    const { posts = {} } = this.props
+    const { categories = [], posts = {} } = this.props
     let formattedPosts = Object.values(posts)
 
     return (
@@ -41,24 +41,16 @@ export class App extends Component {
             </div>
           )}/>
 
-          <Route exact path="/react" render={() => (
+          <Route strict exact path="/:category/" render={( { match } ) => (
             <div>
-              <Categories category="react" />
-              <ListPosts currentCategory="react"/>
-            </div>
-          )}/>
-
-          <Route exact path="/redux" render={() => (
-            <div>
-              <Categories category="redux" />
-              <ListPosts currentCategory="redux"/>
-            </div>
-          )}/>
-
-          <Route exact path="/udacity" render={() => (
-            <div>
-              <Categories category="udacity" />
-              <ListPosts currentCategory="udacity"/>
+              {(
+                categories.filter( category => match.params.category === category.name).map( category =>
+                  <div key={category.name}>
+                    <Categories category={category.name} />
+                    <ListPosts currentCategory={category.name}/>
+                  </div>
+                )
+              )}
             </div>
           )}/>
 
